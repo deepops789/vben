@@ -15,8 +15,8 @@ const authStore = useAuthStore();
 
 const MOCK_USER_OPTIONS: BasicOption[] = [
   {
-    label: 'Super',
-    value: 'vben',
+    label: 'Admin',
+    value: 'admin',
   },
   {
     label: 'Admin',
@@ -24,7 +24,7 @@ const MOCK_USER_OPTIONS: BasicOption[] = [
   },
   {
     label: 'User',
-    value: 'jack',
+    value: 'User',
   },
 ];
 
@@ -42,7 +42,7 @@ const formSchema = computed((): VbenFormSchema[] => {
         .string()
         .min(1, { message: $t('authentication.selectAccount') })
         .optional()
-        .default('vben'),
+        .default('admin'),
     },
     {
       component: 'VbenInput',
@@ -57,7 +57,7 @@ const formSchema = computed((): VbenFormSchema[] => {
             );
             if (findUser) {
               form.setValues({
-                password: '123456',
+                password: 'admin',
                 username: findUser.value,
               });
             }
@@ -78,19 +78,24 @@ const formSchema = computed((): VbenFormSchema[] => {
       label: $t('authentication.password'),
       rules: z.string().min(1, { message: $t('authentication.passwordTip') }),
     },
-    {
-      component: markRaw(SliderCaptcha),
-      fieldName: 'captcha',
-      rules: z.boolean().refine((value) => value, {
-        message: $t('authentication.verifyRequiredTip'),
-      }),
-    },
+    // {
+    //   component: markRaw(SliderCaptcha),
+    //   fieldName: 'captcha',
+    //   rules: z.boolean().refine((value) => value, {
+    //     message: $t('authentication.verifyRequiredTip'),
+    //   }),
+    // },
   ];
 });
 </script>
 
 <template>
   <AuthenticationLogin
+    :show-code-login="false"
+    :show-forget-password="false"
+    :show-qrcode-login="false"
+    :show-register="false"
+    :show-third-party-login="false"
     :form-schema="formSchema"
     :loading="authStore.loginLoading"
     @submit="authStore.authLogin"
