@@ -9,5 +9,31 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     name: import.meta.env.VITE_APP_TITLE,
+    accessMode: 'backend',
+    enableCheckUpdates: false,
+    layout: 'header-sidebar-nav',
+  },
+  breadcrumb: {
+    showHome: true,
+    styleType: 'background',
+  },
+  copyright: {
+    companyName: 'AutoMan',
+    date: '2025',
+  },
+  footer: {
+    enable: true,
+  },
+  sidebar: {
+    width: 220,
+  },
+  tabbar: {
+    styleType: 'plain',
+  },
+  theme: {
+    mode: 'auto',
+    builtinType: 'default',
+    radius: '1',
+    colorPrimary: 'hsl(212 100% 45%)',
   },
 });
