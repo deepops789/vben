@@ -42,3 +42,20 @@ export async function createMenu(params: CreateMenuParams) {
 export async function getMenu(params?: GetMenuParams) {
   return requestClient.get('/system/menu/', { params });
 }
+export async function getMenuList() {
+  try {
+    const response = await getMenu({ page: 1, pageSize: 1000 });
+    // 根据实际API返回的数据结构调整
+    if (response?.data?.list || response?.data) {
+      const menus = response.data.list || response.data;
+      return menus.map((menu: any) => ({
+        label: menu.title || menu.name,
+        value: menu.id,
+      }));
+    }
+    return [];
+  } catch (error) {
+    console.error('获取菜单列表失败:', error);
+    return [];
+  }
+}

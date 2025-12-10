@@ -3,7 +3,7 @@ import { useVbenDrawer } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
 import { createMenu } from '#/api/sys/menu';
-
+import { getAllMenusApi } from '#/api';
 const emit = defineEmits<{
   success: [];
 }>();
@@ -59,14 +59,40 @@ const [BaseForm, formApi] = useVbenForm({
       formItemClass: 'col-span-3 md:col-span-2',
     },
     {
+      component: 'ApiSelect',
+      fieldName: 'menu',
+      label: '上级菜单',
+      rules: 'required',
+      dependencies: {
+        show(values) {
+          return ['permission'].includes(values.types);
+        },
+        triggerFields: ['types'],
+      },
+      componentProps: {
+        // 菜单接口转options格式
+        afterFetch: (data: { name: string; id: number }[]) => {
+          return data.map((item: any) => {
+            return {
+              label: item.name,
+              value: item.id,  // 保持数字类型
+            };
+          });
+        },
+        api: getAllMenusApi,
+        autoSelect: 'first',
+        //numberToString: true,  // 自动将数字转为字符串
+      },
+    },
+    {
       component: 'Input',
       fieldName: 'title',
-      label: '菜单名称',
+      label: '名称',
       rules: 'required',
       // 假设使用 showIf 替代 visibleIf，具体需根据 FormSchema 类型定义调整
       dependencies: {
         show(values) {
-          return ['button', 'menu', 'permission'].includes(values.types);
+          return ['button', 'menu','permission'].includes(values.types);
         },
         triggerFields: ['types'],
       },
@@ -91,9 +117,9 @@ const [BaseForm, formApi] = useVbenForm({
     {
       component: 'Input',
       fieldName: 'permissionCode',
-      label: '权限代码',
+      label: '权限标识',
       dependencies: {
-        show: (values) => values.types === 'permission',
+        show: (values) => values.types === 'button',
         triggerFields: ['types'],
       },
       componentProps: {
@@ -106,15 +132,35 @@ const [BaseForm, formApi] = useVbenForm({
       fieldName: 'path',
       label: '路由地址:',
       rules: 'required',
-      // 假设使用 showIf 替代 visibleIf，具体需根据 FormSchema 类型定义调整
       dependencies: {
         show(values) {
-          return ['menu'].includes(values.types);
+          return values.types === 'permission';
         },
         triggerFields: ['types'],
+        required(values) {
+          return values.types === 'permission';
+        },
       },
       componentProps: {
-        placeholder: '请输入菜单|权限|按钮名称',
+        placeholder: '请输入路由地址',
+      },
+    },
+    {
+      component: 'Input',
+      fieldName: 'component',
+      label: 'Component:',
+      rules: 'required',
+      dependencies: {
+        show(values) {
+          return values.types === 'permission';
+        },
+        triggerFields: ['types'],
+        required(values) {
+          return values.types === 'permission';
+        },
+      },
+      componentProps: {
+        placeholder: '请输入路由地址',
       },
     },
     {
@@ -125,7 +171,13 @@ const [BaseForm, formApi] = useVbenForm({
       fieldName: 'sort',
       label: '排序:',
       rules: 'required',
-    },
+      dependencies: {
+        show(values) {
+          return ['menu'].includes(values.types);
+        },
+        triggerFields: ['types'],
+      },
+    },  
     {
       component: 'RadioGroup',
       componentProps: {

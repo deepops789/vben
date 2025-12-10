@@ -6,9 +6,7 @@
   "workbench.tree.indent": 10,
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.editor.closeOnFileDelete": true,
-  "workbench.editor.limit.enabled": true,
-  "workbench.editor.limit.perEditorGroup": true,
-  "workbench.editor.limit.value": 5,
+  "workbench.editor.limit.enabled": false,
 
   // editor
   "editor.tabSize": 2,
