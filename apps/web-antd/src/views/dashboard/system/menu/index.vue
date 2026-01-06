@@ -4,7 +4,7 @@ import { useVbenModal } from '@vben/common-ui';
 
 import { Button } from 'ant-design-vue';
 
-const { accessMode, hasAccessByCodes } = useAccess();
+//const { accessMode, hasAccessByCodes } = useAccess();
 
 const [Modal, modalApi] = useVbenModal();
 </script>
@@ -12,21 +12,21 @@ const [Modal, modalApi] = useVbenModal();
 <template>
   <div>
     <!-- 需要指明 type="code" -->
-    <AccessControl :codes="['AC_100100']" type="code">
+    <AccessControl :codes="['sys:Menu:Create']" type="code">
       <Button type="primary"> Super 账号可见 ["AC_1000001"] </Button>
     </AccessControl>
 
     <Button type="primary" v-access:code="['admin']">
-      aaaaa 账号可见 ["AC_100100"]
+      aaaaa 账号可见 ["sys:Menu:Create"]
     </Button>
 
-    <AccessControl :codes="['AC_100030']" type="code">
+    <AccessControl :codes="['sys:Menu:Create']" type="code">
       <Button> Admin 账号可见 ["AC_100010"] </Button>
     </AccessControl>
-    <AccessControl :codes="['AC_1000001']" type="code">
+    <AccessControl :codes="['sys:Menu:Create']" type="code">
       <Button> User 账号可见 ["AC_1000001"] </Button>
     </AccessControl>
-    <AccessControl :codes="['AC_100100', 'AC_100010']" type="code">
+    <AccessControl :codes="['sys:Menu:Create', 'AC_100010']" type="code">
       <Button
         type="primary"
         size="large"

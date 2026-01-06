@@ -2,7 +2,7 @@
 import { useVbenDrawer } from '@vben/common-ui';
 
 import { useVbenForm } from '#/adapter/form';
-import { createMenu } from '#/api/sys/menu';
+import { createMenu,getMenu } from '#/api/sys/menu';
 import { getAllMenusApi } from '#/api';
 const emit = defineEmits<{
   success: [];
@@ -82,6 +82,55 @@ const [BaseForm, formApi] = useVbenForm({
         api: getAllMenusApi,
         autoSelect: 'first',
         //numberToString: true,  // 自动将数字转为字符串
+      },
+    },
+    {
+      component: 'ApiSelect',
+      fieldName: 'button_id',
+      label: '权限',
+      rules: 'required',
+      dependencies: {
+        show(values) {
+          return ['button'].includes(values.types);
+        },
+        triggerFields: ['types'],
+      },
+      componentProps: {
+        // 从后端 JSON 的 items[].permissions[] 中提取第一层 permissions 的 title
+        afterFetch: (response: any) => {
+          // 处理响应数据：支持 { code: 0, data: { items: [...] } } 格式
+          let items: any[] = [];
+          
+          if (response?.data?.items) {
+            items = response.data.items;
+          } else if (response?.items) {
+            items = response.items;
+          } else if (Array.isArray(response)) {
+            items = response;
+          }
+          
+          const result: Array<{ label: string; value: number | string }> = [];
+          
+          // 遍历 items，只提取第一层 permissions 的 title
+          items.forEach((item: any) => {
+            if (item.permissions && Array.isArray(item.permissions)) {
+              item.permissions.forEach((perm: any) => {
+                // 只提取第一层 permissions 的 title
+                if (perm.title) {
+                  result.push({
+                    label: perm.title,
+                    // 使用 id 作为 value，如果没有 id 则使用 title
+                    value: perm.id || perm.title,
+                  });
+                }
+              });
+            }
+          });
+          
+          return result;
+        },
+        api: getMenu,
+        autoSelect: 'first',
       },
     },
     {

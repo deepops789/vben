@@ -42,6 +42,13 @@ export async function createMenu(params: CreateMenuParams) {
 export async function getMenu(params?: GetMenuParams) {
   return requestClient.get('/system/menu/', { params });
 }
+export async function updateMenu(params: any) {
+  return requestClient.put('/system/createmenu/', { data: params });
+}
+
+export async function deleteMenu(params: any) {
+  return requestClient.delete('/system/createmenu/', { data: params });
+}
 export async function getMenuList() {
   try {
     const response = await getMenu({ page: 1, pageSize: 1000 });
